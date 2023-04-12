@@ -13,7 +13,6 @@ namespace GameServer.Classes
     {
 
         static OleDbConnection dbc;
-        static OleDbDataAdapter da;
 
         static string path = "C:\\Users\\Asus\\source\\repos\\G10_GameServer\\G10_GameServer\\DataBase\\GameDataBase.mdb";
 
@@ -35,7 +34,11 @@ namespace GameServer.Classes
             OleDbDataReader reader = command.ExecuteReader();
             while (reader.Read())
             {
-                Console.WriteLine(reader[0].ToString() + " " + reader[1].ToString() + " " + reader[2].ToString());
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    Console.Write(reader[i].ToString() + ' ');
+                }
+                Console.WriteLine();
             }
             
         }
@@ -56,14 +59,24 @@ namespace GameServer.Classes
             OleDbCommand command = new OleDbCommand(query, dbc);
             command.ExecuteNonQuery();
         }
-
+        
         public static void Register(string username, string email, string password)
         {
-            string query = "INSERT INTO PlayersData (posX, posY) VALUES (0, 0)";
+            string query = "INSERT INTO PlayersData (username, email, password) VALUES (\'" + username + "\', \'" + email + "\', \'" + password + "\')";
 
             OleDbCommand command = new OleDbCommand(query, dbc);
             command.ExecuteNonQuery();
         }
 
+        public static int Login(string login)
+        {
+            string query = "SELECT password FROM PlayersData WHERE username = \'" + login + "\' OR email = \'" + login + "\'";
+            OleDbCommand command = new OleDbCommand(query, dbc);
+            if (command.ExecuteScalar() == null)
+            {
+                return -1;
+            }
+            return 0;
+        }
     }
 }

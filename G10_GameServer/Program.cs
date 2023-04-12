@@ -17,13 +17,8 @@ namespace GameServer
             DataBaseHelper.Connect();
             DataBaseHelper.GetFromTable();
 
-            Console.WriteLine();
-            DataBaseHelper.AddToTable();
-            DataBaseHelper.GetFromTable();
-
-            Console.WriteLine();
-            DataBaseHelper.UpdateTable();
-            DataBaseHelper.GetFromTable();
+            Console.WriteLine(DataBaseHelper.Login("asd"));
+            
 
 
             DataBaseHelper.Close();

@@ -62,7 +62,10 @@ namespace GameServer.Classes
         
         public static void Register(string username, string email, string password)
         {
-            string query = "INSERT INTO PlayersData (username, email, password) VALUES (\'" + username + "\', \'" + email + "\', \'" + password + "\')";
+            //VALUES('username', 'email', 'password')
+            //string query = "INSERT INTO PlayersData (username, email, password) VALUES (\'" + username + "\', \'" + email + "\', \'" + password + "\')";
+
+            string query = String.Format("INSERT INTO PlayersData ([username], [email], [password]) VALUES (\'{0}\', \'{1}\', \'{2}\')", username, email, password);
 
             OleDbCommand command = new OleDbCommand(query, dbc);
             command.ExecuteNonQuery();

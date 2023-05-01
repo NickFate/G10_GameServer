@@ -7,13 +7,14 @@ using System.Net;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using G10_GameServer.Classes.SendingClasses;
 
 namespace GameServer.Classes
 {
     class Server
     {
 
-        public static List<Player> list = new List<Player>();
+        public static List<SelfData> list = new List<SelfData>();
 
         public EndPoint Ip;
         int listenPort = 9000;

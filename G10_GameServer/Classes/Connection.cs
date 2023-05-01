@@ -6,6 +6,9 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
+using System.Text.Json;
+using G10_GameServer.Classes.SendingClasses;
+
 namespace GameServer.Classes
 {
     public class Connecion
@@ -32,42 +35,30 @@ namespace GameServer.Classes
                     return;
                 }
 
+                
 
                 request = Encoding.UTF8.GetString(data);
-
-                Console.WriteLine("request: " + request);
-
+                // удаляем пустые символы 0x00 или \0
+                request = request.Replace("\0", string.Empty);
+                
                 if (request == "")
                 {
                     clientSocket.Close();
                     return;
                 }
 
-                int id = Convert.ToInt32(Parser.GetByTag(request, "id"));
+                Console.WriteLine("request: " + request);
 
-                bool check = false;
-                for (int i = 0; i < Server.list.Count; i++)
+                if (request.Contains("SelfData"))
                 {
-                    if (Server.list[i].id == id)
-                    {
-                        Server.list[i] = new Player
-                        {
-                            id = id,
-                            posX = Convert.ToInt32(Parser.GetByTag(request, "posX")),
-                            posY = Convert.ToInt32(Parser.GetByTag(request, "posY"))
-                        };
+                    request = request.Replace("}}", "}");
 
-                        check = true;
-                    }
-                }
-                if (!check)
-                {
-                    Server.list.Add(new Player
-                    {
-                        id = id,
-                        posX = Convert.ToInt32(Parser.GetByTag(request, "posX")),
-                        posY = Convert.ToInt32(Parser.GetByTag(request, "posY"))
-                    });
+
+                    SelfData rec_data = JsonSerializer.Deserialize<SelfData>(request);
+
+                    Console.WriteLine(rec_data.ID);
+                    SendMessage();
+                    continue;
                 }
 
                 // обработка
@@ -92,11 +83,18 @@ namespace GameServer.Classes
         {
             string ms = "";
 
-            foreach (Player p in Server.list)
+            foreach (SelfData p in Server.list)
             {
-                ms += Parser.PlayerToString(p);
+                ms += JsonSerializer.Serialize(p);
             }
 
+            byte[] data = Encoding.UTF8.GetBytes(ms);
+            clientSocket.Send(data);
+            Console.WriteLine(ms);
+        }
+
+        public void SendMessage(string ms)
+        {
             byte[] data = Encoding.UTF8.GetBytes(ms);
             clientSocket.Send(data);
             Console.WriteLine(ms);

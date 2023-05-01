@@ -14,16 +14,19 @@ namespace GameServer
     {
         static void Main(string[] args)
         {
+            /*
             DataBaseHelper.Connect();
             DataBaseHelper.GetFromTable();
 
-            Console.WriteLine(DataBaseHelper.Login("asd"));
-            
+            DataBaseHelper.Register("NickFate", "fategraffit@gmail.com", "21wqe21");
 
+            Console.WriteLine(DataBaseHelper.Login("asd"));
+
+            DataBaseHelper.GetFromTable();
 
             DataBaseHelper.Close();
-            
-            //new Server("127.0.0.1", 9000).Start();
+            */
+            new Server("127.0.0.1", 9000).Start();
         }
     }
 
